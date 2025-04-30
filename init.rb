@@ -1,6 +1,6 @@
 require 'redmine'
 
-Rails.logger.info 'Loading redmine_sidebar...'
+Rails.logger.info 'Loading redmine_sidebar..'
 
 Redmine::Plugin.register :redmine_sidebar do
   name 'redmine sidebar'
