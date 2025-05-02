@@ -1,0 +1,83 @@
+<% if @notice %>
+  <div class="flash notice"><%= @notice %></div>
+<% end %>
+
+<%= render 'shared/error_messages', object: sidebar %>
+
+<div class="box">
+  <p>
+    <%= label_tag('sidebar[content_type]', l(:field_content_type)) %>
+    <%= select_tag('sidebar[content_type]',
+      options_for_select([
+        [l(:label_disabled), nil],
+        [l(:label_textile), 'text'],
+        [l(:label_wiki_page), 'wiki'],
+        [l(:label_html_code), 'html']
+      ], params.dig(:sidebar, :content_type) || sidebar&.content_type),
+      onchange: "toggle_sidebar_form_visibility(this.value);") %>
+  </p>
+
+  <% visible = (params.dig(:sidebar, :content_type).present? || sidebar&.content_type.present?) %>
+  <div id="sidebar-content-data" <%= 'style="display: none;"'.html_safe unless visible %>>
+
+    <% show_text = (params.dig(:sidebar, :content_type) == 'text' || sidebar&.content_type == 'text') %>
+    <div id="content-text" <%= 'style="display: none;"'.html_safe unless show_text %>>
+      <p>
+        <%= label_tag('sidebar[content][text]', l(:label_textile).html_safe + ' '.html_safe + content_tag(:span, '*', class: 'required')) %>
+        <%= text_area_tag('sidebar[content][text]',
+          params.dig(:sidebar, :content, :text) || (sidebar.content if sidebar&.content_type == 'text'),
+          cols: 100, rows: 10, class: 'wiki-edit') %>
+        <%= wikitoolbar_for('sidebar_content_text') %>
+      </p>
+    </div>
+
+    <% show_wiki = (params.dig(:sidebar, :content_type) == 'wiki' || sidebar&.content_type == 'wiki') %>
+    <div id="content-wiki" <%= 'style="display: none;"'.html_safe unless show_wiki %>>
+      <p>
+        <%= label_tag('sidebar[content][wiki]', l(:label_wiki_page).html_safe + ' '.html_safe + content_tag(:span, '*', class: 'required')) %>
+        <%= text_field_tag('sidebar[content][wiki]',
+          params.dig(:sidebar, :content, :wiki) || (sidebar.content if sidebar&.content_type == 'wiki'),
+          size: 60) %>
+      </p>
+    </div>
+
+    <% show_html = (params.dig(:sidebar, :content_type) == 'html' || sidebar&.content_type == 'html') %>
+    <div id="content-html" <%= 'style="display: none;"'.html_safe unless show_html %>>
+      <p>
+        <%= label_tag('sidebar[content][html]', l(:label_html_code).html_safe + ' '.html_safe + content_tag(:span, '*', class: 'required')) %>
+        <%= text_area_tag('sidebar[content][html]',
+          params.dig(:sidebar, :content, :html) || (sidebar.content if sidebar&.content_type == 'html'),
+          cols: 100, rows: 10, style: 'width: 99%;') %>
+      </p>
+    </div>
+
+    <p>
+      <%= label_tag('sidebar[location]', l(:field_location)) %>
+      <%= select_tag('sidebar[location]',
+        options_for_select([
+          [l(:label_overview_sidebar), 'project'],
+          [l(:label_issues_sidebar), 'issues'],
+          [l(:label_only_for_url_regexp), 'only_regexp'],
+          [l(:label_except_for_url_regexp), 'except_regexp']
+        ], params.dig(:sidebar, :location) || sidebar&.location),
+        onchange: "toggle_url_regexp_visibility(this.value);") %>
+
+      <% show_regexp = %w[only_regexp except_regexp].include?(params.dig(:sidebar, :location) || sidebar&.location) %>
+      <span id="url-regexp" <%= 'style="display: none;"'.html_safe unless show_regexp %>>
+        <%= l(:label_regular_expression) %>
+        <%= text_field_tag('sidebar[url_regexp]',
+          params.dig(:sidebar, :url_regexp) || sidebar&.url_regexp,
+          size: 40) %>
+      </span>
+    </p>
+  </div>
+</div>
+
+<% unless Setting.plugin_sidebar[:policy] == 'global' %>
+  <div class="contextual">
+    <%= link_to l(:label_sidebar_visibility), { controller: 'sidebar', action: 'pages', id: project }, class: 'icon icon-sidebar' %>
+  </div>
+<% end %>
+
+<p><%= submit_tag(l(:button_save)) %></p>
+

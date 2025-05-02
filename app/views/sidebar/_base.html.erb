@@ -1,0 +1,26 @@
+<% if project.present? %>
+  <% sidebar = SidebarContent.find_by(project_id: project.id) %>
+  <% url = request.fullpath %>
+
+  <% if sidebar && url.present? %>
+    <% begin %>
+      <% regexp = Regexp.new(sidebar.url_regexp) rescue nil %>
+
+      <% show = case sidebar.location
+        when 'only_regexp'
+          sidebar.url_regexp.blank? || (regexp && url =~ regexp)
+        when 'except_regexp'
+          sidebar.url_regexp.blank? || (regexp && !(url =~ regexp))
+        else
+          false
+      end %>
+
+      <% if show %>
+        <%= sidebar_content(sidebar, project) %>
+      <% end %>
+    <% rescue RegexpError => e %>
+      <!-- Ignorer ou logguer -->
+    <% end %>
+  <% end %>
+<% end %>
+

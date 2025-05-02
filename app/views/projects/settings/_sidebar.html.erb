@@ -1,0 +1,24 @@
+<% content_for :header_tags do %>
+  <%= javascript_include_tag('toggle_functions_jquery', plugin: 'sidebar') %>
+<% end %>
+
+<%= form_for(:sidebar,
+             url: { controller: 'sidebar', action: 'edit', id: @project },
+             html: { id: 'sidebar-content-form', class: 'tabular' },
+             remote: true) do %>
+
+  <%= render partial: 'sidebar/form', locals: { sidebar: @sidebar, project: @project } %>
+
+  <% visible = (params[:sidebar] && params[:sidebar][:content_type].present?) || (@sidebar && @sidebar.content_type.present?) %>
+  <span id="preview-link" style="<%= 'display: none;' unless visible %>">
+    <%= link_to l(:label_preview),
+                { controller: 'sidebar', action: 'preview', id: @project },
+                method: :post,
+                remote: true,
+                data: { form: 'sidebar-content-form' } %>
+  </span>
+
+<% end %>
+
+<div id="preview" class="wiki"></div>
+
