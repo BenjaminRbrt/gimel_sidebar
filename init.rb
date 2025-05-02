@@ -1,6 +1,7 @@
 require 'redmine'
 
 require_dependency File.expand_path('../lib/sidebar_hook', __FILE__)
+require_dependency File.expand_path('../lib/sidebar_page', __FILE__)
 
 Rails.logger.info 'Starting Sidebar Content Plugin for Redmine'
 
