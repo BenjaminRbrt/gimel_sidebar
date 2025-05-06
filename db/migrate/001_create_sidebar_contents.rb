@@ -1,4 +1,4 @@
-class CreateSidebarContents < ActiveRecord::Migration
+class CreateSidebarContents < ActiveRecord::Migration[7.2]
 
     def self.up
         create_table :sidebar_contents do |t|

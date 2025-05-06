@@ -1,16 +1,16 @@
-class CreateSidebarSettings < ActiveRecord::Migration[6.0] # Assure-toi d'utiliser la version de migration correcte
+class CreateSidebarSettings < ActiveRecord::Migration[7.2]
 
-  def self.up
-    create_table :sidebar_settings do |t|
-      t.integer :project_id, null: false
-      t.text :pages
-      t.timestamps # Si tu souhaites avoir les timestamps (created_at et updated_at)
+
+    def self.up
+        create_table :sidebar_settings do |t|
+            t.column :project_id, :integer, :null => false
+            t.column :pages,      :text
+        end
+        add_index :sidebar_settings, :project_id, :unique => true, :name => :sidebar_settings_project_id
     end
-    add_index :sidebar_settings, :project_id, unique: true, name: :sidebar_settings_project_id
-  end
 
-  def self.down
-    drop_table :sidebar_settings
-  end
+    def self.down
+        drop_table :sidebar_settings
+    end
 
 end

@@ -25,7 +25,7 @@ Rails.application.config.after_initialize do
     end
 end
 
-Redmine::Plugin.register :redmine_sidebar do
+Redmine::Plugin.register :gimel_sidebar do
   name 'Gimel Sidebar plugin'
   author '/'
   description 'sidebar custom'
@@ -33,8 +33,7 @@ Redmine::Plugin.register :redmine_sidebar do
   url 'https://github.com/BenjaminRbrt/gimel_sidebar'
   directory __dir__ 
 	
-  # Exemples de permissions et menus
-  permission :view_redmine_sidebar, { redmine_sidebar: [:index] }, public: true
+  permission :view_gimel_sidebar, { gimel_sidebar: [:index] }, public: true
   permission :manage_sidebar, { :sidebar => [ :edit, :preview, :pages ] }, :require => :member
   Rails.logger.info "User #{User.current.login} has permission to manage sidebar"
 	
