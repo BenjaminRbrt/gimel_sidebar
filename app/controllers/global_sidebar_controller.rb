@@ -6,7 +6,7 @@ class GlobalSidebarController < ApplicationController
 
   def pages
     @settings = Setting.plugin_sidebar
-
+    logger.info "setting controller pages"
     if request.post? && params[:sidebar_settings]
       @settings = sidebar_settings_params
       Setting.plugin_sidebar = @settings
@@ -18,7 +18,7 @@ class GlobalSidebarController < ApplicationController
   private
 
   def sidebar_settings_params
-    # À adapter selon les clés exactes utilisées par le plugin
+    logger.info "setting controller params"
     params.require(:sidebar_settings).permit!
   end
 end

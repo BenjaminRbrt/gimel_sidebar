@@ -7,6 +7,10 @@ Rails.logger.info 'Starting Sidebar Content Plugin for Redmine'
 
 Rails.application.config.after_initialize do
     Rails.logger.info 'Sidebar: entering to_prepare block'
+    unless ActionView::Base.included_modules.include?(SidebarContentHelper)
+        Rails.logger.info 'Sidebar: Including SidebarContentHelper'
+	ActionView::Base.send(:include, SidebarContentHelper)
+    end
     unless ProjectsHelper.included_modules.include?(SidebarProjectsHelperPatch)
         Rails.logger.info 'Sidebar: Including SidebarProjectsHelperPatch'
         ProjectsHelper.send(:include, SidebarProjectsHelperPatch)
@@ -22,20 +26,22 @@ Rails.application.config.after_initialize do
 end
 
 Redmine::Plugin.register :redmine_sidebar do
-  name 'Redmine Sidebar plugin'
+  name 'Gimel Sidebar plugin'
   author '/'
   description 'sidebar custom'
   version '0.0.1'
-  url 'https://github.com/BenjaminRbrt/redmine_sidebar'
-
+  url 'https://github.com/BenjaminRbrt/gimel_sidebar'
+  directory __dir__ 
+	
   # Exemples de permissions et menus
   permission :view_redmine_sidebar, { redmine_sidebar: [:index] }, public: true
   permission :manage_sidebar, { :sidebar => [ :edit, :preview, :pages ] }, :require => :member
+  Rails.logger.info "User #{User.current.login} has permission to manage sidebar"
 	
     menu :admin_menu, :sidebar,
                     { :controller => 'global_sidebar', :action => 'pages' },
                       :caption => :label_sidebar,
-                      :after => :enumerations
+                      :after => :enumerations do
+  Rails.logger.info "Sidebar menu item added to admin menu"
 end
-
-
+end

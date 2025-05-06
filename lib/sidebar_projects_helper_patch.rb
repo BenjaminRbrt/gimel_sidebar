@@ -1,8 +1,9 @@
 require_dependency 'projects_helper'
 
 module SidebarProjectsHelperPatch
+  
   def self.included(base)
-    base.prepend(InstanceMethods) # Utilisation de `prepend` pour les méthodes d'instance
+    base.prepend(InstanceMethods)
   end
 
   module InstanceMethods

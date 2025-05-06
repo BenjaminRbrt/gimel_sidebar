@@ -16,11 +16,13 @@ module SidebarSettingPatch
 
       # Getter pour `plugin_sidebar`
       def self.plugin_sidebar
+        Rails.logger.info "SidebarSettingPatch getter"
         self[:plugin_sidebar]
       end
 
       # Setter pour `plugin_sidebar`
       def self.plugin_sidebar=(v)
+        Rails.logger.info "SidebarSettingPatch setter"
         setting = find_or_default(:plugin_sidebar)
         setting.value = v || ''
         setting.save(validate: false) # Dans Rails 4+ et plus, on peut utiliser `validate: false` directement
