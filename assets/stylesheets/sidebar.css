@@ -1,3 +1,14 @@
 #admin-menu a.sidebar, .icon-sidebar {
     background-image: url(../images/sidebar.png);
 }
+
+.link-as-button {
+    background: none;
+    border: none;
+    color: #0077cc;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit;
+  }
+  

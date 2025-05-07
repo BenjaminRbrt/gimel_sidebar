@@ -1,5 +1,5 @@
 <% content_for :header_tags do %>
-  <%= javascript_include_tag('toggle_functions_jquery', plugin: 'sidebar') %>
+  <%= javascript_include_tag('toggle_functions_jquery', plugin: 'gimel_sidebar') %>
 <% end %>
 
 <%= form_for(:sidebar,
@@ -9,14 +9,17 @@
 
   <%= render partial: 'sidebar/form', locals: { sidebar: @sidebar, project: @project } %>
 
-  <% visible = (params[:sidebar] && params[:sidebar][:content_type].present?) || (@sidebar && @sidebar.content_type.present?) %>
-  <span id="preview-link" style="<%= 'display: none;' unless visible %>">
-    <%= link_to l(:label_preview),
-                { controller: 'sidebar', action: 'preview', id: @project },
-                method: :post,
-                remote: true,
-                data: { form: 'sidebar-content-form' } %>
-  </span>
+<% visible = (params[:sidebar] && params[:sidebar][:content_type].present?) || (@sidebar && @sidebar.content_type.present?) %>
+
+<span id="preview-link" style="<%= 'display: none;' unless visible %>">
+  <%= submit_tag l(:label_preview),
+                 name: 'preview',
+                 formaction: preview_sidebar_path(@project),
+                 formmethod: :post,
+                 remote: true,
+                class: 'link-as-button'%>
+</span>
+
 
 <% end %>
 

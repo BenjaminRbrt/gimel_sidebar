@@ -1,26 +1,14 @@
-<% if project.present? %>
-  <% sidebar = SidebarContent.find_by(project_id: project.id) %>
-  <% url = request.fullpath %>
-
-  <% if sidebar && url.present? %>
-    <% begin %>
-      <% regexp = Regexp.new(sidebar.url_regexp) rescue nil %>
-
-      <% show = case sidebar.location
-        when 'only_regexp'
-          sidebar.url_regexp.blank? || (regexp && url =~ regexp)
-        when 'except_regexp'
-          sidebar.url_regexp.blank? || (regexp && !(url =~ regexp))
-        else
-          false
-      end %>
-
-      <% if show %>
-        <%= sidebar_content(sidebar, project) %>
-      <% end %>
-    <% rescue RegexpError => e %>
-      <!-- Ignorer ou logguer -->
-    <% end %>
+<% if project %>
+  <% sidebar = SidebarContent.find_by_project_id(project.id) %>
+  <% url = nil %>
+  <% if request.respond_to?(:request_uri) %>
+    <% url = request.request_uri %>
+  <% elsif request.respond_to?(:url) %>
+    <% url = request.url %>
+  <% end %>
+  <% if sidebar && url &&
+      ((sidebar.location == 'only_regexp' && (sidebar.url_regexp.blank? || url =~ Regexp.new(sidebar.url_regexp))) ||
+       (sidebar.location == 'except_regexp' && (sidebar.url_regexp.blank? || !(url =~ Regexp.new(sidebar.url_regexp))))) %>
+    <%= sidebar_content(sidebar, project) %>
   <% end %>
 <% end %>
-

@@ -1,6 +1,6 @@
-<% if project.present? %>
-  <% if (sidebar = SidebarContent.find_by(project_id: project.id)) && sidebar.location == 'issues' %>
+<% if project %>
+  <% sidebar = SidebarContent.find_by_project_id(project.id) %>
+  <% if sidebar && sidebar.location == 'issues' %>
     <%= sidebar_content(sidebar, project) %>
   <% end %>
 <% end %>
-
